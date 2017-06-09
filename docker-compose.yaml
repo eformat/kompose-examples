@@ -1,0 +1,24 @@
+version: "2"
+
+services:
+
+  redis-master:
+    image: redis:2.8.23
+    ports:
+      - "6379"
+
+  redis-slave:
+    image: kubernetes/redis-slave:v2
+    ports:
+      - "6379"
+    environment:
+      - GET_HOSTS_FROM=dns
+
+  frontend:
+    image: gcr.io/google_containers/guestbook:v3
+    ports:
+      - "3000:3000"
+    environment:
+      - GET_HOSTS_FROM=dns
+    labels:
+      kompose.service.type: LoadBalancer
